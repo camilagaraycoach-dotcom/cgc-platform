@@ -1,26 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --red:    #E8302A;
+  --orange: #F47920;
+  --yellow: #F9B233;
+  --purple: #7B5EA7;
+  --blue:   #5B6BB5;
+  --dark:   #111010;
+  --grad: linear-gradient(90deg, #E8302A, #F47920, #F9B233, #7B5EA7, #5B6BB5);
+  --grad-diag: linear-gradient(135deg, #E8302A 0%, #F47920 30%, #F9B233 55%, #7B5EA7 80%, #5B6BB5 100%);
+  --pad-x: 2.5rem;
+  --pad-y: 6rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (max-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --pad-x: 1.25rem;
+    --pad-y: 3.5rem;
   }
 }
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  color: #111010;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bebas { font-family: 'Bebas Neue', sans-serif; }
+
+.grad-text {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.grad-bg { background: var(--grad); }
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* ── LAYOUT RESPONSIVE ── */
+
+/* Navbar */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+}
+
+/* Sección padding */
+.section-pad {
+  padding: var(--pad-y) var(--pad-x);
+}
+
+/* Grid 2 columnas → 1 en móvil */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  /* En móvil, la imagen del curso va ARRIBA del texto */
+  .grid-2 .curso-img-der { order: -1 !important; }
+  .grid-2 .curso-text-der { order: 1 !important; }
+}
+
+/* Grid 4 columnas galería → 2 en móvil */
+.grid-galeria {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 240px 240px;
+  gap: 0.75rem;
+}
+@media (max-width: 768px) {
+  .grid-galeria {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+  .grid-galeria .video-grande {
+    grid-column: 1 / 3 !important;
+    aspect-ratio: 4/3;
+  }
+}
+
+/* Grid 3 columnas → 1 en móvil */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .grid-3 { grid-template-columns: 1fr; }
+}
+
+/* Grid stats 2x2 → 2x2 en móvil (se mantiene) */
+.grid-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Grid equipo (texto + stats) → 1 col en móvil */
+.grid-equipo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+@media (max-width: 768px) {
+  .grid-equipo {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+/* Grid Elite (texto + foto) → 1 col en móvil */
+.grid-elite {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+@media (max-width: 768px) {
+  .grid-elite {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+/* Grid elite galería → 2x2 en móvil */
+.grid-elite-galeria {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+@media (max-width: 768px) {
+  .grid-elite-galeria {
+    grid-template-columns: 1fr 1fr;
+  }
+  .grid-elite-galeria .elite-video {
+    grid-column: 1 / 3 !important;
+    aspect-ratio: 4/3 !important;
+  }
+}
+
+/* Grid online/presencial → ya es 2 cols, bien en móvil */
+.grid-modo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+/* Hero content */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 2.5rem 5rem;
+  max-width: 680px;
+  margin-top: auto;
+}
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 0 1.25rem 3rem;
+    max-width: 100%;
+  }
+}
+
+/* Hero pills */
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2.25rem;
+}
+
+/* Hero CTAs */
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Cursos section */
+.cursos-header-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* Precios cards */
+.precios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+@media (max-width: 640px) {
+  .precios-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Navbar WA button: hidden on desktop, visible on mobile */
+.nav-wa-mobile { display: none; }
+@media (max-width: 640px) {
+  .nav-wa-mobile { display: inline-flex; }
+}
+
+/* Hero imagen posición responsive */
+.hero-img {
+  object-fit: cover;
+  object-position: 60% top;
+}
+@media (max-width: 768px) {
+  .hero-img {
+    object-fit: cover !important;
+    object-position: center 25%;
+  }
+}
+
+/* Quote section */
+.quote-section {
+  position: relative;
+  height: 460px;
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  .quote-section { height: 320px; }
 }
