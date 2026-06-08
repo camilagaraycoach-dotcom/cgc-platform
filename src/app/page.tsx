@@ -633,7 +633,6 @@ export default function Home() {
                 fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
                 color: "#F9B233", background: "rgba(249,178,51,0.1)", border: "1px solid rgba(249,178,51,0.3)",
                 padding: "0.35rem 0.9rem", borderRadius: "100px", marginBottom: "1.25rem",
-                display: "inline-flex",
               }}>
                 🏆 Solo 3 cupos mensuales
               </div>
