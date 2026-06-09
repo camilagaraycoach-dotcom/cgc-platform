@@ -211,7 +211,7 @@ export default async function CursoPage({ params }: { params: Promise<{ id: stri
       )}
 
       {/* PRECIOS */}
-      <PreciosSection cursoId={curso.id} />
+      <PreciosSection />
 
       <Footer />
     </div>

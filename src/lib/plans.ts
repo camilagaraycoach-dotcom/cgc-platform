@@ -12,6 +12,7 @@ export interface Plan {
   badge: string | null;
   renovacion: string;
   destacado: boolean;
+  shopifyLink: string;
 }
 
 export const PLANES: Plan[] = [
@@ -27,6 +28,7 @@ export const PLANES: Plan[] = [
     badge: null,
     renovacion: "",
     destacado: false,
+    shopifyLink: "https://camilagaraycoach.com/products/1-clase-online-en-vivo?variant=47159884808366",
   },
   {
     id: "4-clases",
@@ -40,6 +42,7 @@ export const PLANES: Plan[] = [
     badge: null,
     renovacion: "10% de descuento al renovar antes de que culmine",
     destacado: false,
+    shopifyLink: "https://camilagaraycoach.com/products/4-clases-virtuales?variant=47157324447918",
   },
   {
     id: "8-clases",
@@ -53,6 +56,7 @@ export const PLANES: Plan[] = [
     badge: "MÁS ELEGIDO",
     renovacion: "10% de descuento al renovar antes de que culmine",
     destacado: true,
+    shopifyLink: "https://camilagaraycoach.com/products/8-clases-online-en-vivo?variant=47157324939438",
   },
   {
     id: "12-clases",
@@ -66,6 +70,7 @@ export const PLANES: Plan[] = [
     badge: null,
     renovacion: "20% de descuento al renovar antes de que culmine",
     destacado: false,
+    shopifyLink: "https://camilagaraycoach.com/products/12-clases-online-en-vivo?variant=47159884054702",
   },
   {
     id: "20-clases",
@@ -79,6 +84,7 @@ export const PLANES: Plan[] = [
     badge: "MÁS RECOMENDADO",
     renovacion: "20% de descuento al renovar antes de que culmine",
     destacado: true,
+    shopifyLink: "https://camilagaraycoach.com/collections/all",
   },
   {
     id: "32-clases",
@@ -92,6 +98,7 @@ export const PLANES: Plan[] = [
     badge: null,
     renovacion: "20% de descuento al renovar antes de que culmine",
     destacado: false,
+    shopifyLink: "https://camilagaraycoach.com/collections/all",
   },
 ];
 

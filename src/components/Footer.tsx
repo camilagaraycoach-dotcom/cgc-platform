@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BASE_PATH } from "@/lib/basePath";
 
 export default function Footer() {
   return (
@@ -9,7 +10,7 @@ export default function Footer() {
     }}>
       <div style={{ maxWidth: "800px", margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "1rem" }}>
-          <Image src="/img/logo.png" alt="CGC Method" width={120} height={60}
+          <Image src={`${BASE_PATH}/img/logo.png`} alt="CGC Method" width={120} height={60}
             style={{ objectFit: "contain", mixBlendMode: "screen" }} />
         </div>
         <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.78rem", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "1.5rem" }}>

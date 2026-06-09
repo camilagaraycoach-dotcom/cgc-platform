@@ -3,10 +3,23 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PreciosSection from "@/components/PreciosSection";
+import TestimoniosSection from "@/components/TestimoniosSection";
+import FaqSection from "@/components/FaqSection";
+import FloatingWA from "@/components/FloatingWA";
+import ScrollAnimations from "@/components/ScrollAnimations";
 import Image from "next/image";
 import { useState, useRef } from "react";
+import { BASE_PATH } from "@/lib/basePath";
 
-const WA = "https://wa.me/51954655122";
+const WA_BASE = "https://wa.me/51954655122";
+const WA = `${WA_BASE}?text=${encodeURIComponent("Hola Camila 👋 me interesa saber más sobre sus clases online")}`;
+const WA_MSG: Record<string, string> = {
+  powersplit:  `${WA_BASE}?text=${encodeURIComponent("Hola Camila 👋 vi el programa PowerSplit y quiero saber más sobre las clases de splits y flexibilidad")}`,
+  arcos360:    `${WA_BASE}?text=${encodeURIComponent("Hola Camila 👋 vi el programa Arcos360 y me interesa trabajar mi backbend y puentes")}`,
+  prepa:       `${WA_BASE}?text=${encodeURIComponent("Hola Camila 👋 vi el programa de Preparación Física y quiero más información")}`,
+  elite:       `${WA_BASE}?text=${encodeURIComponent("Hola Camila 👋 me interesa tomar una clase 1 a 1 personalizada contigo 🙌")}`,
+  precios:     `${WA_BASE}?text=${encodeURIComponent("Hola Camila 👋 quiero consultar sobre los paquetes de clases y precios")}`,
+};
 const SHOPIFY = {
   powersplit: "https://camilagaraycoach.com/products/powersplit",
   arcos360:   "https://camilagaraycoach.com/products/arcos360",
@@ -26,24 +39,24 @@ const CURSOS = [
     num: "01", id: "powersplit", nombre: "PowerSplit", p1: "Power", p2: "Split", color: "#F47920",
     tagline: "Split sagital. Split frontal. Sin importar tu nivel.",
     desc: "Elasticidad + fuerza = progreso real y sostenible. Para todas las edades, desde casa, sin equipo.",
-    puntos: ["Splits sagital y frontal", "Elasticidad con fuerza real", "Todos los niveles", "Desde casa, sin equipo"],
-    img: "/img/img5896.jpg", imgPos: "50% 65%", video: "/video/powersplit.mp4", lado: "izq" as const,
+    puntos: ["Splits sagital y frontal", "Elasticidad con fuerza real", "Todos los niveles", "Materiales: 2 bloques de yoga + banda elástica"],
+    img: `${BASE_PATH}/img/img5896.jpg`, imgPos: "50% 65%", video: `${BASE_PATH}/video/powersplit.mp4`, lado: "izq" as const,
     shopify: SHOPIFY.powersplit, landing: LANDING.powersplit,
   },
   {
     num: "02", id: "arcos360", nombre: "Arcos360", p1: "Arcos", p2: "360", color: "#E8302A",
     tagline: "Técnica. Fuerza. Método. Tu arco empieza aquí.",
     desc: "Backbend completo, puentes y movilidad espinal profunda con progresión segura y técnica correcta.",
-    puntos: ["Backbend y puente completo", "Técnica correcta desde el inicio", "Movilidad espinal profunda", "Progresión segura"],
-    img: "/img/arcos-gym.png", imgPos: "center bottom", video: "/video/arcos360.mp4", lado: "der" as const,
+    puntos: ["Backbend y puente completo", "Técnica correcta desde el inicio", "Movilidad espinal profunda", "Materiales: 2 bloques de yoga + banda elástica"],
+    img: `${BASE_PATH}/img/arcos-gym.png`, imgPos: "center bottom", video: `${BASE_PATH}/video/arcos360.mp4`, lado: "der" as const,
     shopify: SHOPIFY.arcos360, landing: LANDING.arcos360,
   },
   {
     num: "03", id: "prepa-fisica", nombre: "Preparación Física", p1: "Preparación", p2: "Física", color: "#7B5EA7",
     tagline: "Prepara el cuerpo que hace posibles los pasos.",
     desc: "Para bailarines, gimnastas y artistas del movimiento. No enseñamos pasos — construimos el cuerpo que los hace posibles.",
-    puntos: ["Elevaciones y arabesque", "Saltos y explosividad", "Fuerza de espalda", "Giros y equilibrio"],
-    img: "/img/prepa-fisica.jpg", imgPos: "center center", video: "/video/prepa-fisica.mp4", lado: "izq" as const,
+    puntos: ["Elevaciones y arabesque", "Saltos y explosividad", "Fuerza de espalda", "Materiales: 2 bloques de yoga + banda elástica"],
+    img: `${BASE_PATH}/img/prepa-fisica.jpg`, imgPos: "center center", video: `${BASE_PATH}/video/prepa-fisica.mp4`, lado: "izq" as const,
     shopify: SHOPIFY.prepa, landing: LANDING.prepa,
   },
 ];
@@ -180,15 +193,15 @@ function EliteVideoThumb() {
     else { ref.current.play(); setPlaying(true); }
   };
   return (
-    <div onClick={toggle} className="elite-video" style={{
-      gridColumn: "1 / 3", position: "relative", borderRadius: "0.75rem",
-      overflow: "hidden", aspectRatio: "1/1", cursor: "pointer", background: "#111010",
+    <div onClick={toggle} style={{
+      position: "relative", width: "100%", height: "100%",
+      cursor: "pointer", background: "#111010",
     }}>
       {!playing && (
-        <Image src="/elite/elite-foto-06.jpg" alt="Clase Elite 1:1" fill sizes="50vw"
+        <Image src={`${BASE_PATH}/elite/elite-foto-06.jpg`} alt="Clase Elite 1:1" fill sizes="50vw"
           style={{ objectFit: "cover", objectPosition: "center top" }} />
       )}
-      <video ref={ref} src="/elite/elite-video-01.mp4" playsInline loop
+      <video ref={ref} src={`${BASE_PATH}/elite/elite-video-01.mp4`} playsInline loop
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: playing ? 1 : 0, transition: "opacity 0.3s" }} />
       {!playing && <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.55) 100%)" }} />}
       <div style={{
@@ -226,10 +239,10 @@ function ClaseVideoThumb() {
       cursor: "pointer", background: "#111010",
     }}>
       {!playing && (
-        <Image src="/clases/clase-01.jpg" alt="Clase en vivo CGC" fill sizes="50vw"
+        <Image src={`${BASE_PATH}/clases/clase-01.jpg`} alt="Clase en vivo CGC" fill sizes="50vw"
           style={{ objectFit: "cover", objectPosition: "center top" }} />
       )}
-      <video ref={ref} src="/clases/clase-video-01.mp4" playsInline loop
+      <video ref={ref} src={`${BASE_PATH}/clases/clase-video-01.mp4`} playsInline loop
         style={{
           position: "absolute", inset: 0, width: "100%", height: "100%",
           objectFit: "cover", opacity: playing ? 1 : 0, transition: "opacity 0.3s",
@@ -279,52 +292,32 @@ export default function Home() {
       <Navbar />
 
       {/* ── HERO ── */}
-      <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden", background: "#0a0808" }}>
-        {/* Foto fondo */}
-        <div className="hero-foto-wrap" style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <Image src="/img/hero.jpg" alt="Camila Garay — CGC Method" fill
-            className="hero-img" priority />
+      <section className="hero">
+        {/* Foto de fondo */}
+        <div className="hero-bg">
+          <Image src={`${BASE_PATH}/img/hero.jpg`} alt="Camila Garay — CGC Method" fill priority style={{ objectFit: "cover", objectPosition: "center 55%", filter: "brightness(0.55) contrast(1.05)" }} />
         </div>
-        {/* Gradientes dramáticos */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 1,
-          background: "linear-gradient(180deg, rgba(10,8,8,0.45) 0%, rgba(10,8,8,0.05) 30%, rgba(10,8,8,0.8) 65%, rgba(10,8,8,0.98) 100%)" }} />
-        <div style={{ position: "absolute", inset: 0, zIndex: 1,
-          background: "linear-gradient(90deg, rgba(10,8,8,0.6) 0%, transparent 55%)" }} />
-        {/* Barra superior */}
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "var(--grad)", zIndex: 4 }} />
-
-        {/* Label top */}
-        <div style={{ position: "relative", zIndex: 2, padding: "7rem var(--pad-x) 0" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem",
-            fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase",
-            color: "rgba(255,255,255,0.45)" }}>
-            <span style={{ width: 18, height: 1, background: "rgba(255,255,255,0.25)", display: "inline-block" }} />
-            Flexibility · Acro · Dance Technique
-            <span style={{ width: 18, height: 1, background: "rgba(255,255,255,0.25)", display: "inline-block" }} />
-          </div>
+        {/* Overlay oscuro */}
+        <div className="hero-overlay" />
+        {/* Barra de color arriba */}
+        <div className="hero-bar" />
+        {/* Label desktop */}
+        <div className="hero-label">
+          <span style={{ width: 18, height: 1, background: "rgba(255,255,255,0.25)", display: "inline-block" }} />
+          Flexibility · Acro · Dance Technique
+          <span style={{ width: 18, height: 1, background: "rgba(255,255,255,0.25)", display: "inline-block" }} />
         </div>
 
-        {/* Contenido principal */}
-        <div className="hero-content" style={{ marginTop: "auto" }}>
-          {/* Título GIGANTE */}
-          <h1 className="bebas" style={{
-            fontSize: "clamp(5.5rem, 24vw, 13rem)",
-            lineHeight: 0.83, color: "#fff", marginBottom: "0.2em", letterSpacing: "-0.01em",
-          }}>
-            TRANS<br />
-            <span className="grad-text">FORMA</span><br />
+        {/* Contenido al fondo */}
+        <div className="hero-content">
+          <h1 className="bebas hero-title">
+            <span className="grad-text">TRANSFORMA</span><br />
             TU<br />
-            <span style={{ WebkitTextStroke: "2px rgba(255,255,255,0.25)", color: "transparent" }}>CUERPO</span>
+            <span style={{ WebkitTextStroke: "2px rgba(255,255,255,0.3)", color: "transparent" }}>CUERPO</span>
           </h1>
 
-          {/* Stats rápidos */}
-          <div style={{
-            display: "flex", alignItems: "center", gap: "1.25rem",
-            margin: "1.5rem 0 1.5rem",
-            paddingTop: "1.25rem",
-            borderTop: "1px solid rgba(255,255,255,0.1)",
-            flexWrap: "wrap",
-          }}>
+          {/* Stats */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1.25rem", margin: "1.25rem 0", paddingTop: "1.25rem", borderTop: "1px solid rgba(255,255,255,0.1)", flexWrap: "wrap" }}>
             {[{ num: "+500", label: "alumnas" }, { num: "+10", label: "países" }, { num: "100+", label: "grabaciones" }].map((s, i) => (
               <div key={s.num} style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
                 <div>
@@ -337,38 +330,20 @@ export default function Home() {
           </div>
 
           {/* Pills */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1.75rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1.5rem" }}>
             {["🌍 Online · todo el mundo", "📍 Presencial · Lima"].map(p => (
-              <span key={p} style={{
-                fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-                color: "#fff", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.14)",
-                padding: "0.4rem 0.9rem", borderRadius: "100px",
-              }}>{p}</span>
+              <span key={p} style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#fff", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.14)", padding: "0.4rem 0.9rem", borderRadius: "100px" }}>{p}</span>
             ))}
           </div>
 
           {/* CTAs */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
-            <a href="#cursos" className="grad-bg" style={{
-              fontSize: "0.85rem", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase",
-              color: "#fff", padding: "1rem 2.25rem", borderRadius: "100px", textDecoration: "none",
-              boxShadow: "0 8px 32px rgba(232,48,42,0.5)",
-            }}>
+            <a href="#cursos" className="grad-bg" style={{ fontSize: "0.85rem", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", color: "#fff", padding: "1rem 2.25rem", borderRadius: "100px", textDecoration: "none", boxShadow: "0 8px 32px rgba(232,48,42,0.5)" }}>
               Quiero inscribirme →
             </a>
-            <a href={WA} target="_blank" rel="noopener noreferrer" style={{
-              fontSize: "0.8rem", fontWeight: 600, color: "rgba(255,255,255,0.65)",
-              border: "1px solid rgba(255,255,255,0.18)", padding: "1rem 1.5rem",
-              borderRadius: "100px", textDecoration: "none",
-            }}>
+            <a href={WA} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.8rem", fontWeight: 600, color: "rgba(255,255,255,0.65)", border: "1px solid rgba(255,255,255,0.18)", padding: "1rem 1.5rem", borderRadius: "100px", textDecoration: "none" }}>
               💬 Escríbenos
             </a>
-          </div>
-
-          {/* Scroll hint */}
-          <div style={{ marginTop: "2rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <div style={{ width: 1, height: 28, background: "rgba(255,255,255,0.12)" }} />
-            <span style={{ fontSize: "0.58rem", color: "rgba(255,255,255,0.25)", letterSpacing: "0.2em", textTransform: "uppercase" }}>scroll</span>
           </div>
         </div>
       </section>
@@ -395,7 +370,7 @@ export default function Home() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 Clases grupales · Equipo CGC
               </div>
-              <h2 className="bebas" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", lineHeight: 0.9, color: "#fff", marginBottom: "1rem" }}>
+              <h2 className="bebas anim" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", lineHeight: 0.9, color: "#fff", marginBottom: "1rem" }}>
                 El <span className="grad-text">equipo CGC</span><br />está contigo
               </h2>
               <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.95rem", lineHeight: 1.75, maxWidth: 380 }}>
@@ -482,7 +457,7 @@ export default function Home() {
             <p style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "#bbb", marginBottom: "0.75rem" }}>
               Así se viven nuestras clases
             </p>
-            <h2 className="bebas" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", lineHeight: 0.9, color: "#111010" }}>
+            <h2 className="bebas anim" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", lineHeight: 0.9, color: "#111010" }}>
               Clases en vivo <span className="grad-text">por Zoom</span>
             </h2>
           </div>
@@ -490,8 +465,7 @@ export default function Home() {
           {/* Grid fotos + video destacado */}
           <div className="grid-galeria">
             <ClaseVideoThumb />
-            {["/clases/clase-01.jpg", "/clases/clase-02.jpg", "/clases/clase-03.jpg", "/clases/clase-04.jpg",
-              "/clases/clase-05.jpg", "/clases/clase-06.jpg", "/clases/clase-07.jpg", "/clases/clase-08.jpg"].map((src, i) => (
+            {[1,2,3,4,5,6,7,8].map(n => `${BASE_PATH}/clases/clase-0${n}.jpg`).map((src, i) => (
               <div key={i} style={{ position: "relative", borderRadius: "0.75rem", overflow: "hidden", minHeight: 160 }}>
                 <Image src={src} alt={`Clase en vivo ${i+1}`} fill sizes="(max-width:768px) 50vw, 25vw"
                   style={{ objectFit: "cover", objectPosition: "center top" }} />
@@ -515,6 +489,8 @@ export default function Home() {
         </div>
       </section>
 
+      <TestimoniosSection />
+
       {/* ── CURSOS ── fondo claro + videos */}
       <section id="cursos" className="section-pad" style={{ background: "#fff" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -533,13 +509,16 @@ export default function Home() {
               </div>
               <span style={{ fontSize: "0.72rem", color: "#bbb", fontWeight: 500 }}>Dictadas por el equipo CGC · Entrenadores certificados</span>
             </div>
-            <h2 className="bebas" style={{ fontSize: "clamp(3rem, 7vw, 5rem)", lineHeight: 0.9, color: "#111010" }}>
+            <h2 className="bebas anim" style={{ fontSize: "clamp(3rem, 7vw, 5rem)", lineHeight: 0.9, color: "#111010" }}>
               Elige tu <span className="grad-text">programa</span>
             </h2>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", marginTop: "0.75rem", background: "#f7f7f7", border: "1px solid #e5e5e5", borderRadius: "100px", padding: "0.45rem 1rem", fontSize: "0.72rem", fontWeight: 600, color: "#666" }}>
+              🧘 Materiales: 2 bloques de yoga + 1 banda elástica
+            </div>
           </div>
 
           {CURSOS.map((curso, i) => (
-            <div key={curso.id} className="grid-2"
+            <div key={curso.id} id={curso.id} className={`grid-2 anim anim-delay-${i + 1}`}
               style={{ marginBottom: i < CURSOS.length - 1 ? "5rem" : 0 }}>
               {/* Video lado izquierdo */}
               {curso.lado === "izq" && <CursoVideo curso={curso} />}
@@ -573,12 +552,12 @@ export default function Home() {
                   }}>
                     Inscribirme →
                   </a>
-                  <a href={curso.landing} target="_blank" rel="noopener noreferrer" style={{
-                    fontSize: "0.78rem", fontWeight: 600, color: "#666",
-                    border: "1px solid #ddd", padding: "0.8rem 1.5rem",
+                  <a href={WA_MSG[curso.id === "prepa-fisica" ? "prepa" : curso.id]} target="_blank" rel="noopener noreferrer" style={{
+                    fontSize: "0.78rem", fontWeight: 600, color: "#25D366",
+                    border: "1.5px solid #25D366", padding: "0.8rem 1.5rem",
                     borderRadius: "100px", textDecoration: "none",
                   }}>
-                    Ver más →
+                    💬 Consultar
                   </a>
                 </div>
               </div>
@@ -592,7 +571,7 @@ export default function Home() {
 
       {/* ── QUOTE / FOTO SALTO ── */}
       <section className="quote-section">
-        <Image src="/img/salto.jpg" alt="CGC Method" fill style={{ objectFit: "cover", objectPosition: "center 30%" }} />
+        <Image src={`${BASE_PATH}/img/salto.jpg`} alt="CGC Method" fill style={{ objectFit: "cover", objectPosition: "center 30%" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(17,10,10,0.88) 0%, rgba(17,10,10,0.45) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", padding: "0 var(--pad-x)" }}>
           <div style={{ maxWidth: 600 }}>
@@ -636,7 +615,7 @@ export default function Home() {
               }}>
                 🏆 Solo 3 cupos mensuales
               </div>
-              <h2 className="bebas" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", lineHeight: 0.9, color: "#111010", marginBottom: "1rem" }}>
+              <h2 className="bebas anim" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", lineHeight: 0.9, color: "#111010", marginBottom: "1rem" }}>
                 CGC <span className="grad-text">Elite</span><br />Clases 1 a 1
               </h2>
               <p style={{ color: "#666", fontSize: "1rem", lineHeight: 1.7, maxWidth: 420, marginBottom: "0.75rem" }}>
@@ -671,19 +650,19 @@ export default function Home() {
                 }}>
                   Ver plan Elite →
                 </a>
-                <a href={LANDING.elite} target="_blank" rel="noopener noreferrer" style={{
-                  fontSize: "0.78rem", fontWeight: 600, color: "#666",
-                  border: "1px solid #ddd", padding: "0.9rem 1.6rem",
+                <a href={WA_MSG.elite} target="_blank" rel="noopener noreferrer" style={{
+                  fontSize: "0.78rem", fontWeight: 600, color: "#25D366",
+                  border: "1.5px solid #25D366", padding: "0.9rem 1.6rem",
                   borderRadius: "100px", textDecoration: "none",
                 }}>
-                  Ver más →
+                  💬 Quiero mi clase 1:1
                 </a>
               </div>
             </div>
 
             {/* Foto principal Elite */}
             <div style={{ position: "relative", borderRadius: "1.5rem", overflow: "hidden", aspectRatio: "4/5", boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }}>
-              <Image src="/elite/elite-foto-01.jpg" alt="CGC Elite — Clase 1 a 1 con Camila" fill
+              <Image src={`${BASE_PATH}/elite/elite-foto-01.jpg`} alt="CGC Elite — Clase 1 a 1 con Camila" fill
                 sizes="(max-width:768px) 100vw, 50vw"
                 style={{ objectFit: "cover", objectPosition: "center top" }} />
               <div style={{
@@ -697,42 +676,54 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Galería elite — fotos + screenshots zoom + video */}
-          <div className="grid-elite-galeria">
-            {/* Video elite grande — 2x1 */}
-            <EliteVideoThumb />
+          {/* Galería elite — video + fotos + zoom */}
+          {/* Fila 1: video ancho completo */}
+          <div style={{ marginTop: "1.5rem" }}>
+            <div className="elite-video" style={{ position: "relative", borderRadius: "1rem", overflow: "hidden", aspectRatio: "16/7", width: "100%" }}>
+              <EliteVideoThumb />
+            </div>
+          </div>
 
-            {/* Fotos pequeñas fila 1 */}
-            {["/elite/elite-foto-02.jpg", "/elite/elite-foto-03.jpg"].map((src, i) => (
-              <div key={i} style={{ position: "relative", borderRadius: "0.75rem", overflow: "hidden", aspectRatio: "1/1" }}>
-                <Image src={src} alt={`Elite 1:1 ${i+1}`} fill sizes="25vw" style={{ objectFit: "cover", objectPosition: "center top" }} />
-              </div>
-            ))}
-
-            {/* Screenshots Zoom */}
-            {["/elite/elite-zoom-01.png", "/elite/elite-zoom-02.png", "/elite/elite-zoom-03.png"].map((src, i) => (
-              <div key={i} style={{ position: "relative", borderRadius: "0.75rem", overflow: "hidden", aspectRatio: "1/1", background: "#111010" }}>
-                <Image src={src} alt={`Clase Zoom Elite ${i+1}`} fill sizes="25vw" style={{ objectFit: "cover", objectPosition: "center top" }} />
-                <div style={{
-                  position: "absolute", top: "0.5rem", left: "0.5rem",
-                  background: "#2D8CFF", borderRadius: "4px",
-                  padding: "0.15rem 0.5rem", fontSize: "0.6rem", fontWeight: 700, color: "#fff", letterSpacing: "0.05em",
-                }}>ZOOM</div>
-              </div>
-            ))}
-
-            {/* Fotos extra */}
-            {["/elite/elite-foto-04.jpg", "/elite/elite-foto-05.jpg"].map((src, i) => (
-              <div key={i} style={{ position: "relative", borderRadius: "0.75rem", overflow: "hidden", aspectRatio: "1/1" }}>
-                <Image src={src} alt={`Elite foto ${i+4}`} fill sizes="25vw" style={{ objectFit: "cover", objectPosition: "center" }} />
-              </div>
-            ))}
+          {/* Fila 2: 2 fotos + 2 zoom capturas */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "0.75rem",
+            marginTop: "0.75rem",
+          }} className="grid-elite-galeria-row">
+            {/* Foto 1 */}
+            <div style={{ position: "relative", borderRadius: "0.75rem", overflow: "hidden", aspectRatio: "4/5" }}>
+              <Image src={`${BASE_PATH}/elite/elite-foto-02.jpg`} alt="Elite 1:1 sesión" fill sizes="25vw"
+                style={{ objectFit: "cover", objectPosition: "center top" }} />
+            </div>
+            {/* Foto 2 */}
+            <div style={{ position: "relative", borderRadius: "0.75rem", overflow: "hidden", aspectRatio: "4/5" }}>
+              <Image src={`${BASE_PATH}/elite/elite-foto-04.jpg`} alt="Elite 1:1 entrenamiento" fill sizes="25vw"
+                style={{ objectFit: "cover", objectPosition: "center" }} />
+            </div>
+            {/* Zoom 1 */}
+            <div style={{ position: "relative", borderRadius: "0.75rem", overflow: "hidden", aspectRatio: "4/5", background: "#111010" }}>
+              <Image src={`${BASE_PATH}/elite/elite-zoom-01.png`} alt="Clase Zoom Elite" fill sizes="25vw"
+                style={{ objectFit: "cover", objectPosition: "center top" }} />
+              <div style={{ position: "absolute", top: "0.6rem", left: "0.6rem", background: "#2D8CFF",
+                borderRadius: "4px", padding: "0.2rem 0.55rem", fontSize: "0.6rem", fontWeight: 700, color: "#fff", letterSpacing: "0.05em" }}>ZOOM</div>
+            </div>
+            {/* Zoom 2 */}
+            <div style={{ position: "relative", borderRadius: "0.75rem", overflow: "hidden", aspectRatio: "4/5", background: "#111010" }}>
+              <Image src={`${BASE_PATH}/elite/elite-zoom-02.png`} alt="Clase Zoom Elite 2" fill sizes="25vw"
+                style={{ objectFit: "cover", objectPosition: "center top" }} />
+              <div style={{ position: "absolute", top: "0.6rem", left: "0.6rem", background: "#2D8CFF",
+                borderRadius: "4px", padding: "0.2rem 0.55rem", fontSize: "0.6rem", fontWeight: 700, color: "#fff", letterSpacing: "0.05em" }}>ZOOM</div>
+            </div>
           </div>
 
         </div>
       </section>
 
+      <FaqSection />
       <Footer />
+      <FloatingWA />
+      <ScrollAnimations />
     </div>
   );
 }
