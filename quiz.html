@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Qué clase es para ti? — CGC Method</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fuchsia:  #E91E8C;
+  --fuchsial: #FF4DB8;
+  --purple:   #7B2FBE;
+  --purplel:  #A855F7;
+  --yellow:   #FFD60A;
+  --yellowd:  #F59E0B;
+  --bg:       #FAFAFF;
+  --card:     #FFFFFF;
+  --text:     #1A1032;
+  --muted:    #6B7280;
+  --border:   #EDE9FE;
+  --borderf:  #FBB6E5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 0 1.1rem 3rem;
+}
+.bebas { font-family: 'Bebas Neue', 'Arial Black', sans-serif; letter-spacing: 0.02em; }
+
+/* ── BG decoration ───────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; top: -120px; right: -120px; z-index: 0;
+  width: 380px; height: 380px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(233,30,140,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed; bottom: -80px; left: -80px; z-index: 0;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(123,47,190,.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+header, .progress-wrap, .quiz { position: relative; z-index: 1; }
+
+/* ── Header ──────────────────────────────────── */
+header {
+  width: 100%; max-width: 460px;
+  padding: 1.4rem 0 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+}
+header img { height: 36px; object-fit: contain; }
+
+/* ── Progress ────────────────────────────────── */
+.progress-wrap { width: 100%; max-width: 460px; padding-bottom: 1.6rem; }
+.progress-track {
+  height: 5px;
+  background: #EDE9FE;
+  border-radius: 100px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--fuchsia), var(--purple), var(--purplel));
+  border-radius: 100px;
+  transition: width .45s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+.progress-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted);
+  text-align: right; margin-top: 0.45rem;
+}
+
+/* ── Quiz ────────────────────────────────────── */
+.quiz { width: 100%; max-width: 460px; }
+.step { display: none; }
+.step.active { display: block; animation: rise .35s ease both; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Back ────────────────────────────────────── */
+.btn-back {
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  color: var(--muted); font-size: 0.8rem; font-weight: 600;
+  display: flex; align-items: center; gap: 0.3rem;
+  padding: 0 0 1rem; transition: color .2s;
+}
+.btn-back:hover { color: var(--text); }
+
+/* ── Step header ─────────────────────────────── */
+.step-tag {
+  display: inline-flex; align-items: center;
+  font-size: 0.6rem; font-weight: 800; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--fuchsia), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 0.4rem;
+}
+.step-title {
+  font-size: clamp(2rem, 8vw, 2.6rem);
+  line-height: 1.0; margin-bottom: 0.4rem; color: var(--text);
+}
+.step-sub {
+  font-size: 0.88rem; color: var(--muted);
+  line-height: 1.5; margin-bottom: 1.5rem;
+}
+
+/* ── Option cards (list) ─────────────────────── */
+.opts { display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.4rem; }
+.opt {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 16px; padding: 0.95rem 1.1rem;
+  cursor: pointer; display: flex; align-items: center; gap: 0.9rem;
+  text-align: left; width: 100%;
+  box-shadow: 0 1px 4px rgba(123,47,190,.07);
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+  font-family: inherit;
+}
+.opt:hover {
+  border-color: var(--borderf);
+  box-shadow: 0 4px 16px rgba(233,30,140,.12);
+  transform: translateY(-1px);
+}
+.opt.sel {
+  border-color: var(--fuchsia);
+  background: linear-gradient(135deg, #FFF0F8, #F5F0FF);
+  box-shadow: 0 4px 20px rgba(233,30,140,.15);
+}
+.opt-ico { font-size: 1.7rem; flex-shrink: 0; line-height: 1; }
+.opt-body { flex: 1; }
+.opt-title { font-size: 0.92rem; font-weight: 700; line-height: 1.25; color: var(--text); display: block; }
+.opt-desc  { font-size: 0.74rem; color: var(--muted); margin-top: 0.18rem; display: block; }
+.opt-check {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid #D1C4E9; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s; font-size: 0.65rem; font-weight: 900;
+}
+.opt.sel .opt-check {
+  background: var(--fuchsia); border-color: var(--fuchsia); color: #fff;
+}
+.opt.sel .opt-check::after { content: '✓'; }
+
+/* ── 2-col options ───────────────────────────── */
+.opts2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 1.4rem; }
+.opt2 {
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 16px; padding: 1.3rem 0.75rem;
+  cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; gap: 0.4rem; text-align: center;
+  box-shadow: 0 1px 4px rgba(123,47,190,.07);
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+  font-family: inherit;
+}
+.opt2:hover {
+  border-color: var(--borderf);
+  box-shadow: 0 4px 16px rgba(233,30,140,.12);
+  transform: translateY(-2px);
+}
+.opt2.sel {
+  border-color: var(--fuchsia);
+  background: linear-gradient(135deg, #FFF0F8, #F5F0FF);
+  box-shadow: 0 4px 20px rgba(233,30,140,.15);
+}
+.opt2 .ico  { font-size: 2rem; line-height: 1; }
+.opt2 .lbl  { font-size: 0.9rem; font-weight: 800; color: var(--text); }
+.opt2 .sub  { font-size: 0.7rem; color: var(--muted); line-height: 1.3; }
+
+/* ── Country select ──────────────────────────── */
+.country-sel {
+  width: 100%; background: var(--card);
+  border: 2px solid var(--border); border-radius: 16px;
+  padding: 1rem 1.1rem; color: var(--text);
+  font-size: 0.93rem; font-family: inherit;
+  appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%23A855F7' d='M5 7L0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1rem center;
+  margin-bottom: 1.4rem;
+  box-shadow: 0 1px 4px rgba(123,47,190,.07);
+  transition: border-color .2s, box-shadow .2s;
+}
+.country-sel:focus { outline: none; border-color: var(--fuchsia); box-shadow: 0 0 0 3px rgba(233,30,140,.12); }
+
+/* ── Next button ─────────────────────────────── */
+.btn-next {
+  width: 100%; border: none; border-radius: 100px;
+  padding: 1rem 2rem; cursor: pointer; font-family: inherit;
+  font-size: 0.9rem; font-weight: 800;
+  letter-spacing: 0.05em; text-transform: uppercase; color: #fff;
+  background: linear-gradient(135deg, var(--fuchsia), var(--purple));
+  box-shadow: 0 8px 24px rgba(233,30,140,.3);
+  opacity: 0.3; pointer-events: none;
+  transition: opacity .2s, transform .15s, box-shadow .2s;
+}
+.btn-next.on { opacity: 1; pointer-events: all; }
+.btn-next.on:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(233,30,140,.45);
+}
+
+/* ── MENOR screen ────────────────────────────── */
+#step-menor .menor-card {
+  background: linear-gradient(135deg, #FFF0F8, #F5F0FF);
+  border: 2px solid var(--borderf);
+  border-radius: 20px; padding: 2rem 1.5rem;
+  text-align: center; margin-bottom: 1.2rem;
+  box-shadow: 0 8px 32px rgba(233,30,140,.1);
+}
+.menor-icon { font-size: 3rem; margin-bottom: 0.75rem; display: block; }
+.menor-title {
+  font-size: 1.55rem; line-height: 1.1; margin-bottom: 0.6rem;
+  color: var(--purple);
+}
+.menor-text {
+  font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.25rem;
+}
+.menor-text strong { color: var(--text); }
+.menor-wa {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: linear-gradient(135deg, var(--fuchsia), var(--purple));
+  color: #fff; text-decoration: none; border-radius: 100px;
+  padding: 0.85rem 1.75rem;
+  font-size: 0.88rem; font-weight: 800; letter-spacing: 0.04em;
+  box-shadow: 0 6px 20px rgba(233,30,140,.3);
+  transition: transform .15s, box-shadow .2s;
+}
+.menor-wa:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(233,30,140,.4); }
+.menor-back {
+  display: block; margin-top: 1rem;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  font-size: 0.8rem; font-weight: 600; color: var(--muted);
+  transition: color .2s;
+}
+.menor-back:hover { color: var(--text); }
+
+/* ── Result ──────────────────────────────────── */
+.result-top { text-align: center; padding: 0.5rem 0 1.5rem; }
+.confetti { font-size: 2.8rem; margin-bottom: 0.4rem; display: block; }
+.result-hl {
+  font-size: clamp(2.2rem, 9vw, 3rem); line-height: 1;
+  background: linear-gradient(135deg, var(--fuchsia), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 0.4rem;
+}
+.result-sub { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+/* ── Course cards ────────────────────────────── */
+.course-card {
+  border-radius: 18px; border: 2px solid;
+  padding: 1.25rem; margin-bottom: 0.9rem;
+  background: var(--card);
+  box-shadow: 0 2px 12px rgba(123,47,190,.08);
+}
+.course-card.main {
+  border-color: var(--fuchsia);
+  background: linear-gradient(135deg, #FFF0F8 0%, #F5F0FF 100%);
+  box-shadow: 0 6px 24px rgba(233,30,140,.14);
+}
+.course-card.also  { border-color: var(--border); }
+.course-card.elite-card {
+  border-color: var(--yellow);
+  background: linear-gradient(135deg, #FFFBEB, #FFF0F8);
+  box-shadow: 0 6px 24px rgba(245,158,11,.15);
+}
+.c-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.58rem; font-weight: 800; letter-spacing: 0.14em;
+  text-transform: uppercase; border-radius: 100px;
+  padding: 0.22rem 0.65rem; margin-bottom: 0.7rem;
+}
+.c-badge.hot   { background: var(--fuchsia); color: #fff; }
+.c-badge.dim   { background: var(--border); color: var(--muted); }
+.c-badge.gold  { background: var(--yellow); color: #92400e; }
+.c-name { font-size: 1.85rem; line-height: 1; margin-bottom: 0.3rem; color: var(--text); }
+.c-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.55; margin-bottom: 0.7rem; }
+.c-price { display: flex; align-items: center; gap: 0.45rem; }
+.c-price-new { font-size: 1.8rem; line-height: 1; color: var(--fuchsia); }
+.c-price-old { font-size: 0.82rem; color: var(--muted); text-decoration: line-through; }
+.c-price-badge {
+  font-size: 0.58rem; font-weight: 800;
+  background: var(--yellow); color: #92400e;
+  padding: 0.12rem 0.42rem; border-radius: 100px;
+}
+.c-price-per { font-size: 0.72rem; color: var(--muted); }
+
+/* ── CTA block ───────────────────────────────── */
+.cta-block { margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.cta-main {
+  display: block; text-align: center; text-decoration: none;
+  background: linear-gradient(135deg, var(--fuchsia), var(--purple));
+  border-radius: 100px; padding: 1.05rem 2rem;
+  font-size: 0.9rem; font-weight: 800; letter-spacing: 0.05em;
+  text-transform: uppercase; color: #fff;
+  box-shadow: 0 8px 24px rgba(233,30,140,.3);
+  transition: transform .15s, box-shadow .2s;
+}
+.cta-main:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(233,30,140,.45); }
+.cta-wa {
+  display: block; text-align: center; text-decoration: none;
+  background: #fff; border: 2px solid var(--border);
+  border-radius: 100px; padding: 0.95rem 2rem;
+  font-size: 0.85rem; font-weight: 700; color: var(--purple);
+  transition: border-color .2s, box-shadow .2s;
+}
+.cta-wa:hover { border-color: var(--borderf); box-shadow: 0 4px 16px rgba(233,30,140,.1); }
+
+.result-note {
+  font-size: 0.78rem; color: var(--muted);
+  line-height: 1.6; text-align: center;
+  margin-top: 0.9rem; padding: 0.9rem 0;
+  border-top: 1px solid var(--border);
+}
+.restart-btn {
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  font-size: 0.76rem; color: #C4B5FD;
+  display: block; margin: 0.5rem auto 0;
+  text-decoration: underline; transition: color .2s;
+}
+.restart-btn:hover { color: var(--purple); }
+
+/* ── Package card ────────────────────────────── */
+.pkg-card {
+  background: linear-gradient(135deg, #F5F0FF, #FFF0F8);
+  border: 2px solid var(--borderf);
+  border-radius: 18px; padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px rgba(233,30,140,.1);
+}
+.pkg-icon { font-size: 1.8rem; margin-bottom: 0.4rem; display: block; }
+.pkg-label {
+  font-size: 0.58rem; font-weight: 800; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--fuchsia); margin-bottom: 0.4rem; display: block;
+}
+.pkg-name { font-size: 1.6rem; line-height: 1.05; margin-bottom: 0.25rem; color: var(--text); }
+.pkg-per {
+  display: inline-block;
+  background: var(--yellow); color: #78350F;
+  border-radius: 100px; padding: 0.18rem 0.65rem;
+  font-size: 0.72rem; font-weight: 800; margin-bottom: 0.55rem;
+}
+.pkg-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.5; }
+
+/* ── Schedule block ──────────────────────────── */
+.sched-block {
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 18px; padding: 1.1rem 1.15rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(123,47,190,.06);
+}
+.sched-header {
+  font-size: 0.62rem; font-weight: 800; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--purple);
+  margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.4rem;
+}
+.sched-row {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  padding: 0.55rem 0; border-top: 1px solid var(--border);
+}
+.sched-row:first-of-type { border-top: none; }
+.sched-day-name {
+  font-size: 0.72rem; font-weight: 800; color: var(--text);
+  width: 2.8rem; flex-shrink: 0; padding-top: 0.18rem;
+}
+.sched-times { display: flex; flex-wrap: wrap; gap: 0.35rem; flex: 1; }
+.sched-chip {
+  font-size: 0.68rem; font-weight: 700;
+  border-radius: 100px; padding: 0.22rem 0.6rem;
+  white-space: nowrap;
+}
+.sched-note {
+  font-size: 0.72rem; color: var(--muted);
+  margin-top: 0.6rem; line-height: 1.4;
+  font-style: italic;
+}
+.elite-wa-btn {
+  display: inline-block; margin-top: 0.85rem;
+  background: #25D366; color: #fff; font-weight: 800;
+  font-size: 0.85rem; padding: 0.6rem 1.2rem;
+  border-radius: 100px; text-decoration: none;
+  box-shadow: 0 4px 12px rgba(37,211,102,.3);
+}
+.elite-wa-btn:hover { background: #1ebe5d; }
+.next-step-card {
+  background: linear-gradient(135deg, #F0FDF4, #ECFDF5);
+  border: 2px dashed rgba(16,185,129,.4);
+  border-radius: 18px; padding: 1.25rem; margin-bottom: 1rem;
+}
+.next-step-label {
+  display: block; font-size: 0.6rem; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: #065F46; margin-bottom: 0.5rem;
+}
+.video-block { margin-bottom: 1rem; }
+.video-label {
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--purple); margin-bottom: 0.6rem;
+}
+.pres-video {
+  width: 100%; border-radius: 16px; display: block;
+  box-shadow: 0 4px 20px rgba(123,47,190,.15);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="https://camilagaraycoach-dotcom.github.io/cgc-platform/img/logo.png" alt="CGC Method">
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-track">
+    <div class="progress-fill" id="pFill"></div>
+  </div>
+  <div class="progress-label" id="pLabel">Paso 1 de 6</div>
+</div>
+
+<div class="quiz" id="quiz">
+
+  <!-- ── PASO 1: Objetivo ─────────────────────── -->
+  <div class="step active" id="s1">
+    <div class="step-tag">Paso 1 de 6</div>
+    <h1 class="step-title bebas">¿CUÁL ES<br>TU OBJETIVO?</h1>
+    <p class="step-sub">Elige el que mejor te describe.</p>
+    <div class="opts">
+      <button class="opt" data-v="split" onclick="pick(this,1)">
+        <span class="opt-ico">🦵</span>
+        <span class="opt-body">
+          <span class="opt-title">Lograr el split / mejorar flex de piernas</span>
+          <span class="opt-desc">Splits frontales, laterales o ambos</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-v="arcos" onclick="pick(this,1)">
+        <span class="opt-ico">🫶</span>
+        <span class="opt-body">
+          <span class="opt-title">Lograr arcos / mejorar flex de espalda</span>
+          <span class="opt-desc">Puente, contorsión, apertura de columna</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-v="flex-general" onclick="pick(this,1)">
+        <span class="opt-ico">🤸</span>
+        <span class="opt-body">
+          <span class="opt-title">Lograr flex general (piernas y espalda)</span>
+          <span class="opt-desc">Quiero trabajar todo el cuerpo</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-v="fuerza" onclick="pick(this,1)">
+        <span class="opt-ico">🤸</span>
+        <span class="opt-body">
+          <span class="opt-title">Aprender acrobacias</span>
+          <span class="opt-desc">Parada de manos, rueda de carro, rodamientos</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-v="todo" onclick="pick(this,1)">
+        <span class="opt-ico">⚡</span>
+        <span class="opt-body">
+          <span class="opt-title">Ser más flexible y más fuerte</span>
+          <span class="opt-desc">Quiero una transformación completa</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+    </div>
+    <button class="btn-next" id="n1" onclick="go(2)">Continuar →</button>
+  </div>
+
+  <!-- ── PASO 2: Nivel ────────────────────────── -->
+  <div class="step" id="s2">
+    <button class="btn-back" onclick="go(1)">← Volver</button>
+    <div class="step-tag">Paso 2 de 6</div>
+    <h1 class="step-title bebas">¿CUÁL ES<br>TU NIVEL ACTUAL?</h1>
+    <p class="step-sub">¡No hay respuesta mala! Nos ayuda a darte la ruta ideal.</p>
+    <div class="opts">
+      <button class="opt" data-v="principiante" onclick="pick(this,2)">
+        <span class="opt-ico">🌱</span>
+        <span class="opt-body">
+          <span class="opt-title">Principiante</span>
+          <span class="opt-desc">Recién empiezo o tengo poca base de flexibilidad</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-v="intermedio" onclick="pick(this,2)">
+        <span class="opt-ico">🔥</span>
+        <span class="opt-body">
+          <span class="opt-title">Intermedio</span>
+          <span class="opt-desc">Ya entreno, tengo algo de base pero quiero progresar más</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-v="avanzado" onclick="pick(this,2)">
+        <span class="opt-ico">⚡</span>
+        <span class="opt-body">
+          <span class="opt-title">Avanzado</span>
+          <span class="opt-desc">Entreno regularmente y busco llevar mi técnica más lejos</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+    </div>
+    <button class="btn-next" id="n2" onclick="go(3)">Continuar →</button>
+  </div>
+
+  <!-- ── PASO 3: Tiempo ───────────────────────── -->
+  <div class="step" id="s3">
+    <button class="btn-back" onclick="go(2)">← Volver</button>
+    <div class="step-tag">Paso 3 de 6</div>
+    <h1 class="step-title bebas">¿CUÁNTO TIEMPO<br>PUEDES DEDICARLE?</h1>
+    <p class="step-sub">Horas a la semana que puedes entrenar (clases + práctica en casa).</p>
+    <div class="opts">
+      <button class="opt" data-v="poco" onclick="pick(this,3)">
+        <span class="opt-ico">⏰</span>
+        <span class="opt-body">
+          <span class="opt-title">1 – 2 horas por semana</span>
+          <span class="opt-desc">Tengo poco tiempo pero soy constante</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-v="medio" onclick="pick(this,3)">
+        <span class="opt-ico">⏱️</span>
+        <span class="opt-body">
+          <span class="opt-title">3 – 5 horas por semana</span>
+          <span class="opt-desc">Puedo dedicarle tiempo de verdad</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+      <button class="opt" data-v="mucho" onclick="pick(this,3)">
+        <span class="opt-ico">🚀</span>
+        <span class="opt-body">
+          <span class="opt-title">Más de 5 horas por semana</span>
+          <span class="opt-desc">Soy muy dedicada y quiero acelerar mis resultados</span>
+        </span>
+        <span class="opt-check"></span>
+      </button>
+    </div>
+    <button class="btn-next" id="n3" onclick="go(4)">Continuar →</button>
+  </div>
+
+  <!-- ── PASO 4: País ──────────────────────────── -->
+  <div class="step" id="s4">
+    <button class="btn-back" onclick="go(3)">← Volver</button>
+    <div class="step-tag">Paso 4 de 6</div>
+    <h1 class="step-title bebas">¿DE QUÉ<br>PAÍS ERES?</h1>
+    <p class="step-sub">Para mostrarte los horarios en tu zona horaria.</p>
+    <select class="country-sel" id="cSel" onchange="pickCountry(this)">
+      <option value="">— Selecciona tu país —</option>
+      <optgroup label="América Latina">
+        <option value="PE:0">🇵🇪 Perú</option>
+        <option value="CO:0">🇨🇴 Colombia</option>
+        <option value="EC:0">🇪🇨 Ecuador</option>
+        <option value="MX:-1">🇲🇽 México</option>
+        <option value="CR:-1">🇨🇷 Costa Rica</option>
+        <option value="GT:-1">🇬🇹 Guatemala</option>
+        <option value="HN:-1">🇭🇳 Honduras</option>
+        <option value="SV:-1">🇸🇻 El Salvador</option>
+        <option value="NI:-1">🇳🇮 Nicaragua</option>
+        <option value="VE:+1">🇻🇪 Venezuela</option>
+        <option value="BO:+1">🇧🇴 Bolivia</option>
+        <option value="PY:+1">🇵🇾 Paraguay</option>
+        <option value="DO:+1">🇩🇴 Rep. Dominicana</option>
+        <option value="CU:+1">🇨🇺 Cuba</option>
+        <option value="PA:0">🇵🇦 Panamá</option>
+        <option value="AR:+2">🇦🇷 Argentina</option>
+        <option value="UY:+2">🇺🇾 Uruguay</option>
+        <option value="BR:+2">🇧🇷 Brasil</option>
+        <option value="CL:+1">🇨🇱 Chile</option>
+      </optgroup>
+      <optgroup label="España y Europa">
+        <option value="ES:+6">🇪🇸 España</option>
+        <option value="EU:+6">🌍 Otro país europeo</option>
+      </optgroup>
+      <optgroup label="Norteamérica">
+        <option value="US:0">🇺🇸 Estados Unidos</option>
+        <option value="CA:0">🇨🇦 Canadá</option>
+      </optgroup>
+      <optgroup label="Otro">
+        <option value="OT:0">🌐 Otro país</option>
+      </optgroup>
+    </select>
+    <button class="btn-next" id="n4" onclick="go(5)">Continuar →</button>
+  </div>
+
+  <!-- ── PASO 5: Edad ──────────────────────────── -->
+  <div class="step" id="s5">
+    <button class="btn-back" onclick="go(4)">← Volver</button>
+    <div class="step-tag">Paso 5 de 6</div>
+    <h1 class="step-title bebas">¿CUÁNTOS<br>AÑOS TIENES?</h1>
+    <p class="step-sub">Para personalizar mejor tu recomendación.</p>
+    <div class="opts2">
+      <button class="opt2" data-v="menor" onclick="pick2(this,5)">
+        <span class="ico">🌟</span>
+        <span class="lbl">Menos de 18</span>
+        <span class="sub">Soy menor de edad</span>
+      </button>
+      <button class="opt2" data-v="mayor" onclick="pick2(this,5)">
+        <span class="ico">💫</span>
+        <span class="lbl">18 años o más</span>
+        <span class="sub">Soy mayor de edad</span>
+      </button>
+    </div>
+    <button class="btn-next" id="n5" onclick="checkAge()">Continuar →</button>
+  </div>
+
+  <!-- ── PASO 6: Meta específica ──────────────── -->
+  <div class="step" id="s6">
+    <button class="btn-back" onclick="go(5)">← Volver</button>
+    <div class="step-tag">Paso 6 de 6</div>
+    <h1 class="step-title bebas">¿TIENES UNA<br>META ESPECÍFICA?</h1>
+    <p class="step-sub">Competencia, evento especial, o algo muy concreto que quieres lograr en una fecha.</p>
+    <div class="opts2">
+      <button class="opt2" data-v="si" onclick="pick2(this,6)">
+        <span class="ico">🏆</span>
+        <span class="lbl">Sí</span>
+        <span class="sub">Competencia, show, examen o meta exacta</span>
+      </button>
+      <button class="opt2" data-v="no" onclick="pick2(this,6)">
+        <span class="ico">🌱</span>
+        <span class="lbl">No</span>
+        <span class="sub">Quiero mejorar de forma continua</span>
+      </button>
+    </div>
+    <button class="btn-next" id="n6" onclick="showResult()">Ver mi recomendación ✨</button>
+  </div>
+
+  <!-- ── PANTALLA MENOR DE EDAD ─────────────────── -->
+  <div class="step" id="step-menor">
+    <div class="menor-card">
+      <span class="menor-icon">🤗</span>
+      <h2 class="menor-title bebas">¡NOS ALEGRA QUE<br>QUIERAS ENTRENAR!</h2>
+      <p class="menor-text">
+        Por tu seguridad, <strong>no podemos atenderte directamente</strong> siendo menor de edad.<br><br>
+        Pero no te preocupes — pídele a tu <strong>mamá, papá o apoderado</strong> que nos escriba y con gusto los orientamos para que puedas empezar 💜
+      </p>
+      <a href="https://wa.me/51954655122?text=Hola%2C%20mi%20hijo%2Fa%20es%20menor%20de%20edad%20y%20quiere%20inscribirse%20en%20CGC%20Method.%20%C2%BFNos%20pueden%20orientar%3F%20%F0%9F%99%8F"
+         class="menor-wa" target="_blank" rel="noopener">
+        💬 Mi mamá / papá escribe aquí
+      </a>
+      <button class="menor-back" onclick="go(6)">← Volver</button>
+    </div>
+    <div style="text-align:center; margin-top: 0.5rem;">
+      <p style="font-size:0.78rem; color:var(--muted);">
+        📱 También pueden escribir directamente al<br>
+        <strong style="color:var(--purple);">+51 954 655 122</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- ── RESULTADO ─────────────────────────────── -->
+  <div class="step" id="step-result">
+    <div class="result-top">
+      <span class="confetti">🎯</span>
+      <h2 class="result-hl bebas">TU PLAN IDEAL</h2>
+      <p class="result-sub" id="rSub"></p>
+    </div>
+    <div id="rCards"></div>
+
+    <!-- Video de presentación -->
+    <div class="video-block">
+      <p class="video-label">🎬 Conoce cómo trabajamos en CGC Method</p>
+      <video class="pres-video" src="video/presentacion.mp4" controls playsinline></video>
+    </div>
+
+    <div class="cta-block">
+      <a href="https://camilagaraycoach.com/collections/frontpage" class="cta-main" target="_blank" rel="noopener">
+        Quiero inscribirme →
+      </a>
+      <a href="#" class="cta-wa" id="waLink" target="_blank" rel="noopener">
+        💬 Tengo preguntas, quiero escribirles
+      </a>
+    </div>
+    <p class="result-note" id="rNote"></p>
+    <button class="restart-btn" onclick="restart()">↺ Volver a empezar</button>
+  </div>
+
+</div><!-- /quiz -->
+
+<script>
+const A = {};
+const TOTAL = 6;
+
+const WA = '51954655122';
+
+/* ── Navigation ──────────────────────────────── */
+function go(step) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('s' + step) || document.getElementById('step-' + step);
+  if (el) el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const pct = ((step - 1) / TOTAL) * 100;
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('pLabel').textContent = step <= TOTAL ? 'Paso ' + step + ' de ' + TOTAL : '¡Listo!';
+}
+
+function goId(id) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Selection ───────────────────────────────── */
+function pick(el, step) {
+  el.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  A[step] = el.dataset.v;
+  document.getElementById('n' + step).classList.add('on');
+}
+
+function pick2(el, step) {
+  el.parentElement.querySelectorAll('.opt2').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  A[step] = el.dataset.v;
+  document.getElementById('n' + step).classList.add('on');
+}
+
+function pickCountry(sel) {
+  if (sel.value) {
+    A[4] = sel.value;
+    document.getElementById('n4').classList.add('on');
+  }
+}
+
+/* ── Age check ───────────────────────────────── */
+function checkAge() {
+  if (A[5] === 'menor') {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-menor').classList.add('active');
+    document.getElementById('pFill').style.width = '100%';
+    document.getElementById('pLabel').textContent = '¡Listo!';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    go(6);
+  }
+}
+
+/* ── Courses ─────────────────────────────────── */
+const CURSOS = {
+  powersplit: {
+    nombre: 'PowerSplit', emoji: '🦵',
+    desc: 'El método más efectivo para lograr el split. Flexibilidad de piernas de forma progresiva y sin lesiones — resultados visibles en 3–6 meses.',
+  },
+  arcos360: {
+    nombre: 'Arcos360', emoji: '🫶',
+    desc: 'Flexibilidad de espalda, puente y contorsión con metodología segura. Ideal para bailarines, gimnastas o quienes quieren abrir su columna.',
+  },
+  acrobases: {
+    nombre: 'ACROBASES', emoji: '🤸',
+    desc: 'Aprende acrobacias básicas de forma segura y progresiva: parada de manos, parada de codos, rodamiento adelante y atrás, y rueda de carro (aspa de molino). Incluye preparación física integrada.',
+  },
+  elite: {
+    nombre: 'CGC Elite 1:1', emoji: '👑',
+    desc: 'Entrenamiento 100% personalizado. Tu propio coach, tu propio plan, seguimiento individual. Para quienes tienen una meta muy específica o quieren avanzar más rápido.',
+  }
+};
+
+/* ── Packages ────────────────────────────────── */
+const PAQUETES = {
+  poco:  { icon:'🌱', nombre:'4 clases al mes',  per:'1 clase por semana', desc:'4 clases en vivo grupales por Zoom + acceso a la biblioteca de clases grabadas. Ritmo sostenible para empezar y ver resultados reales.' },
+  medio: { icon:'🔥', nombre:'8 clases al mes',  per:'2 clases por semana', desc:'8 clases en vivo grupales por Zoom + acceso a la biblioteca de clases grabadas. El ritmo ideal para progresar de verdad.' },
+  mucho: { icon:'🚀', nombre:'12 clases al mes', per:'3 clases por semana', desc:'12 clases en vivo grupales por Zoom + acceso a la biblioteca de clases grabadas. Para quienes van en serio y quieren transformación visible.' },
+};
+
+/* ── Schedule data (stored as Lima time) ─────── */
+// day: 0=Dom 1=Lun 2=Mar 3=Mié 4=Jue 5=Vie 6=Sáb
+const SCHEDULE_LIMA = [
+  { day:1, h:18, m: 0, curso:'powersplit' }, // Lun 6PM
+  { day:1, h:19, m: 0, curso:'arcos360'   }, // Lun 7PM
+  { day:1, h:20, m: 0, curso:'acrobases'  }, // Lun 8PM
+  { day:2, h:11, m: 0, curso:'arcos360'   }, // Mar 11AM
+  { day:2, h:12, m: 0, curso:'powersplit' }, // Mar 12PM
+  { day:2, h:20, m: 0, curso:'powersplit' }, // Mar 8PM
+  { day:2, h:21, m: 0, curso:'arcos360'   }, // Mar 9PM
+  { day:3, h:10, m:30, curso:'acrobases'  }, // Mié 10:30AM
+  { day:3, h:18, m: 0, curso:'powersplit' }, // Mié 6PM
+  { day:3, h:19, m: 0, curso:'arcos360'   }, // Mié 7PM
+  { day:4, h:10, m: 0, curso:'arcos360'   }, // Jue 10AM
+  { day:4, h:11, m: 0, curso:'powersplit' }, // Jue 11AM
+  { day:4, h:18, m: 0, curso:'powersplit' }, // Jue 6PM
+  { day:5, h:10, m:30, curso:'acrobases'  }, // Vie 10:30AM
+  { day:6, h: 9, m: 0, curso:'arcos360'   }, // Sáb 9AM
+  { day:6, h:10, m: 0, curso:'powersplit' }, // Sáb 10AM
+  { day:6, h:11, m: 0, curso:'acrobases'  }, // Sáb 11AM
+];
+const DAYS_SHORT = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const CURSO_COLORS = {
+  powersplit: { bg:'rgba(233,30,140,.12)', text:'#C2185B', border:'rgba(233,30,140,.3)' },
+  arcos360:   { bg:'rgba(123,47,190,.12)', text:'#6A1B9A', border:'rgba(123,47,190,.3)' },
+  acrobases:  { bg:'rgba(16,185,129,.12)', text:'#065F46', border:'rgba(16,185,129,.3)' },
+};
+
+/* ── Build schedule HTML ─────────────────────── */
+function buildSchedule(cursos, countryVal) {
+  const offset = parseInt((countryVal || ':0').split(':')[1] || '0');
+
+  // Filter & convert to local time
+  const slots = SCHEDULE_LIMA
+    .filter(s => cursos.includes(s.curso))
+    .map(s => {
+      const totalH = s.day * 24 + s.h + offset;
+      const localDay = ((Math.floor(totalH / 24) % 7) + 7) % 7;
+      const localH   = ((totalH % 24) + 24) % 24;
+      return { ...s, localDay, localH };
+    })
+    .sort((a, b) => {
+      // Sort Mon–Sun, then by time
+      const da = (a.localDay + 6) % 7;
+      const db = (b.localDay + 6) % 7;
+      return da - db || a.localH - b.localH;
+    });
+
+  if (!slots.length) return '';
+
+  // Group by local day
+  const byDay = {};
+  slots.forEach(s => {
+    if (!byDay[s.localDay]) byDay[s.localDay] = [];
+    byDay[s.localDay].push(s);
+  });
+
+  const fmt = (h, m) => {
+    const ap = h >= 12 ? 'pm' : 'am';
+    const h12 = h % 12 || 12;
+    const ms = m ? ':' + String(m).padStart(2,'0') : '';
+    return h12 + ms + ap;
+  };
+
+  let html = '';
+  [1,2,3,4,5,6,0].forEach(d => {
+    if (!byDay[d]) return;
+    html += `<div class="sched-row">
+      <div class="sched-day-name">${DAYS_SHORT[d]}</div>
+      <div class="sched-times">`;
+    byDay[d].forEach(s => {
+      const col = CURSO_COLORS[s.curso] || {};
+      html += `<span class="sched-chip" style="background:${col.bg};color:${col.text};border:1px solid ${col.border}">${fmt(s.localH, s.m)} · ${CURSOS[s.curso].nombre}</span>`;
+    });
+    html += `</div></div>`;
+  });
+
+  // Warn if any class is midnight/dawn (unusual hours)
+  const oddHours = slots.filter(s => s.localH < 6 || s.localH >= 23);
+  if (oddHours.length) {
+    html += `<p class="sched-note">⚠️ Algunos horarios pueden caer de madrugada en tu zona. Escríbenos y te ayudamos a encontrar el horario ideal.</p>`;
+  }
+  return html;
+}
+
+/* ── Recommendation ──────────────────────────── */
+function recommend() {
+  const obj    = A[1], nivel  = A[2], tiempo = A[3];
+  const pais   = A[4], compet = A[6];
+  let cursos = [];
+  let acrobasesNext = false;
+  if      (obj === 'split')        cursos = ['powersplit'];
+  else if (obj === 'arcos')        cursos = ['arcos360'];
+  else if (obj === 'flex-general') cursos = ['powersplit', 'arcos360'];
+  else if (obj === 'fuerza') {
+    if (nivel === 'principiante') {
+      cursos = ['powersplit', 'arcos360'];
+      acrobasesNext = true;
+    } else {
+      cursos = ['acrobases'];
+    }
+  }
+  else if (obj === 'todo')         cursos = ['powersplit', 'arcos360', 'acrobases'];
+  if (tiempo === 'poco' && cursos.length > 2) cursos = cursos.slice(0, 2);
+  const needElite = compet === 'si' || (nivel === 'avanzado' && tiempo === 'mucho');
+  const paquete = PAQUETES[tiempo] || PAQUETES.medio;
+  return { cursos, needElite, nivel, pais, paquete, acrobasesNext };
+}
+
+/* ── Course card (no prices) ─────────────────── */
+function courseCard(key, isMain) {
+  const c = CURSOS[key];
+  const badge = isMain
+    ? '<span class="c-badge hot">✨ Recomendado para ti</span>'
+    : '<span class="c-badge dim">También puedes sumar</span>';
+  return `<div class="course-card ${isMain ? 'main' : 'also'}">
+    ${badge}
+    <div class="c-name bebas">${c.emoji} ${c.nombre}</div>
+    <p class="c-desc">${c.desc}</p>
+  </div>`;
+}
+
+function eliteCard() {
+  const c = CURSOS.elite;
+  const msg = encodeURIComponent(`Hola! Hice el quiz de CGC Method y me recomendaron el programa Elite 1:1. Me gustaría contarles mi objetivo 🙌`);
+  return `<div class="course-card elite-card">
+    <span class="c-badge gold">👑 Ideal para tu meta específica</span>
+    <div class="c-name bebas">${c.emoji} ${c.nombre}</div>
+    <p class="c-desc">Clases en vivo individuales, 100% virtuales — desde donde estés. Tu propio coach, tu plan personalizado y seguimiento constante. Para quienes tienen una meta muy específica o quieren avanzar más rápido.</p>
+    <a href="https://wa.me/${WA}?text=${msg}" class="elite-wa-btn" target="_blank" rel="noopener">
+      💬 Cuéntanos tu objetivo
+    </a>
+  </div>`;
+}
+
+/* ── Package card ────────────────────────────── */
+function packageCard(pkg) {
+  return `<div class="pkg-card">
+    <span class="pkg-label">📦 Paquete recomendado para ti</span>
+    <span class="pkg-icon">${pkg.icon}</span>
+    <div class="pkg-name bebas">${pkg.nombre}</div>
+    <span class="pkg-per">${pkg.per}</span>
+    <p class="pkg-desc">${pkg.desc}</p>
+  </div>`;
+}
+
+/* ── Show result ─────────────────────────────── */
+function showResult() {
+  const { cursos, needElite, nivel, pais, paquete, acrobasesNext } = recommend();
+
+  const subMap = {
+    principiante: 'Perfecto para empezar — en CGC Method arrancamos desde cero. ¡No necesitas experiencia previa!',
+    intermedio:   'Tu base te pone en el lugar ideal para crecer rápido. ¡Vas a sorprenderte con tus avances!',
+    avanzado:     'Tu nivel avanzado nos permite diseñarte un camino con desafíos reales. ¡Vamos lejos!',
+  };
+  document.getElementById('rSub').textContent = subMap[nivel] || 'Basado en tus respuestas:';
+
+  // Course cards
+  let html = '';
+  if (needElite) html += eliteCard();
+  cursos.forEach((k, i) => { html += courseCard(k, i === 0 && !needElite); });
+
+  // Tarjeta "próximo paso" para principiantes que quieren acrobacias
+  if (acrobasesNext) {
+    html += `<div class="next-step-card">
+      <span class="next-step-label">🗓️ Tu próximo paso · semana 3 en adelante</span>
+      <div class="c-name bebas">🤸 ACROBASES</div>
+      <p class="c-desc">Cuando lleves 2 semanas entrenando con PowerSplit y Arcos360, tu cuerpo ya va a estar más fuerte y preparado. Ese es el momento ideal para unirte a ACROBASES y avanzar mucho más rápido.</p>
+    </div>`;
+  }
+
+  // Package card
+  html += packageCard(paquete);
+
+  // Schedule
+  const schedHTML = buildSchedule(needElite ? cursos : cursos, pais);
+  if (schedHTML) {
+    const COUNTRY_LABELS = {'PE:0':'Perú','MX:-1':'México','AR:+2':'Argentina','CO:0':'Colombia','CL:+2':'Chile','ES:+6':'España','US_E:-0':'EE.UU. (Este)','US_W:-3':'EE.UU. (Oeste)','OTHER:0':'Otro país'};
+    const countryName = COUNTRY_LABELS[pais] || 'tu zona';
+    html += `<div class="sched-block">
+      <div class="sched-header">📅 Horarios disponibles · ${countryName}</div>
+      ${schedHTML}
+    </div>`;
+  }
+
+  document.getElementById('rCards').innerHTML = html;
+  document.getElementById('rNote').textContent = '';
+
+  const names = cursos.map(k => CURSOS[k].nombre).join(' + ') + (needElite ? ' + CGC Elite 1:1' : '');
+  const msg = encodeURIComponent(`Hola! Hice el quiz de CGC Method y me recomendaron: ${names} (${paquete.nombre}). Quiero más info 🙌`);
+  document.getElementById('waLink').href = `https://wa.me/${WA}?text=${msg}`;
+
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-result').classList.add('active');
+  document.getElementById('pFill').style.width = '100%';
+  document.getElementById('pLabel').textContent = '¡Listo!';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Restart ─────────────────────────────────── */
+function restart() {
+  Object.keys(A).forEach(k => delete A[k]);
+  document.querySelectorAll('.opt, .opt2').forEach(el => el.classList.remove('sel'));
+  document.querySelectorAll('.btn-next').forEach(b => b.classList.remove('on'));
+  document.getElementById('cSel').value = '';
+  go(1);
+}
+</script>
+</body>
+</html>

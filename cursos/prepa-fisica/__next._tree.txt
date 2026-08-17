@@ -1,0 +1,5 @@
+:HL["/cgc-platform/_next/static/chunks/32l1vn-ftz03_.css","style"]
+:HL["/cgc-platform/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/cgc-platform/_next/static/media/fabcf92ba1ccea36-s.p.1w_qz2ahumqmz.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"cursos","param":null,"prefetchHints":0,"slots":{"children":{"name":"id","param":{"type":"d","key":"prepa-fisica","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"F6dvIc_g_MdwBA8oPZLGQ"}
